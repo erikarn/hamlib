@@ -891,6 +891,9 @@ const char* ic10_get_info(RIG *rig)
 	}
 
 	switch (firmbuf[4]) {
+	case '1': return "ID: TS-711";
+	case '2': return "ID: TS-811";
+	case '3': return "ID: TS-940S";
 	case '4': return "ID: TS-440S";
 	case '5': return "ID: R-5000";
 	default: return "ID: unknown";
