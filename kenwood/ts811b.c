@@ -1,5 +1,5 @@
 /*
- *  Hamlib Kenwood backend - TS-711 description
+ *  Hamlib Kenwood backend - TS-811 description
  *  Copyright (c) 2000-2004 by Stephane Fillod
  *
  *
@@ -30,51 +30,40 @@
 #include "ic10.h"
 
 
-#define TS711_ALL_MODES (RIG_MODE_CW|RIG_MODE_SSB|RIG_MODE_FM)
+#define TS811_ALL_MODES (RIG_MODE_CW|RIG_MODE_SSB|RIG_MODE_FM)
 
 /* func and levels to be checked */
-#define TS711_FUNC_ALL (RIG_FUNC_TSQL|RIG_FUNC_LOCK|RIG_FUNC_MUTE)
+#define TS811_FUNC_ALL (RIG_FUNC_TSQL|RIG_FUNC_LOCK|RIG_FUNC_MUTE)
 
-#define TS711_LEVEL_ALL (RIG_LEVEL_STRENGTH)
+#define TS811_LEVEL_ALL (RIG_LEVEL_STRENGTH)
 
-#define TS711_VFO (RIG_VFO_A|RIG_VFO_B)
+#define TS811_VFO (RIG_VFO_A|RIG_VFO_B)
 
-#define TS711_VFO_OP (RIG_OP_UP|RIG_OP_DOWN)
-#define TS711_SCAN_OP (RIG_SCAN_VFO)
+#define TS811_VFO_OP (RIG_OP_UP|RIG_OP_DOWN)
+#define TS811_SCAN_OP (RIG_SCAN_VFO)
 
-/*
- * XXX TODO: if_len may be different depending upon whether it's a A,B or E.
- * + Tone on/off isn't applicable to "kenwood" versions of the E rigs
- * + Tone frequency is only A/B rigs
- * + Offset is only TS-811A, TS-811B, TS-811E, TS-711A, TS-711E.
- *
- * So maybe this should have a separate set of backends for each
- * rig variation because of the frequency range differences, capability
- * differences, etc, etc.
- */
-
-static struct kenwood_priv_caps  ts711_priv_caps  = {
+static struct kenwood_priv_caps  ts811_priv_caps  = {
 	.cmdtrm =  EOM_KEN,
 	.if_len =  28,
 };
 
 /*
- * ts711 rig capabilities.
+ * ts811 rig capabilities.
  *
- * specs: http://www.qsl.net/sm7vhs/radio/kenwood/ts711/specs.htm
+ * specs: http://www.qsl.net/sm7vhs/radio/kenwood/ts811/specs.htm
  *
- * TODO: protocol to be check with manual!
+ *  TODO: protocol to be check with manual!
  */
-const struct rig_caps ts711_caps = {
-.rig_model =  RIG_MODEL_TS711,
-.model_name = "TS-711",
+const struct rig_caps ts811_caps = {
+.rig_model =  RIG_MODEL_TS811B,
+.model_name = "TS-811B",
 .mfg_name =  "Kenwood",
 .version =  BACKEND_VER "." IC10_VER,
 .copyright =  "LGPL",
 .status =  RIG_STATUS_UNTESTED,
 .rig_type =  RIG_TYPE_TRANSCEIVER,
 .ptt_type =  RIG_PTT_RIG,
-.dcd_type =  RIG_DCD_NONE,
+.dcd_type =  RIG_DCD_RIG,
 .port_type =  RIG_PORT_SERIAL,
 .serial_rate_min =  4800,
 .serial_rate_max =  4800,
@@ -87,16 +76,16 @@ const struct rig_caps ts711_caps = {
 .timeout =  1000,
 .retry =  10,
 
-.has_get_func =  TS711_FUNC_ALL,
-.has_set_func =  TS711_FUNC_ALL,
-.has_get_level =  TS711_LEVEL_ALL,
-.has_set_level =  RIG_LEVEL_SET(TS711_LEVEL_ALL),
+.has_get_func =  TS811_FUNC_ALL,
+.has_set_func =  TS811_FUNC_ALL,
+.has_get_level =  TS811_LEVEL_ALL,
+.has_set_level =  RIG_LEVEL_SET(TS811_LEVEL_ALL),
 .has_get_parm =  RIG_PARM_NONE,
 .has_set_parm =  RIG_PARM_NONE,
 .level_gran =  {},                 /* FIXME: granularity */
 .parm_gran =  {},
-.vfo_ops =  TS711_VFO_OP,
-.scan_ops =  TS711_SCAN_OP,
+.vfo_ops =  TS811_VFO_OP,
+.scan_ops =  TS811_SCAN_OP,
 .ctcss_list =  kenwood38_ctcss_list,
 .preamp =   { RIG_DBLST_END, },
 .attenuator =   { RIG_DBLST_END, },
@@ -114,37 +103,37 @@ const struct rig_caps ts711_caps = {
 		   },
 
 .rx_range_list1 =  {
-	{MHz(144),MHz(146),TS711_ALL_MODES,-1,-1,TS711_VFO},
+	{MHz(430),MHz(440),TS811_ALL_MODES,-1,-1,TS811_VFO},
 	RIG_FRNG_END,
   }, /* rx range */
 .tx_range_list1 =  {
-    {MHz(144),MHz(146),TS711_ALL_MODES,W(5),W(25),TS711_VFO},
+    {MHz(430),MHz(440),TS811_ALL_MODES,W(5),W(25),TS811_VFO},
 	RIG_FRNG_END,
   }, /* tx range */
 
 .rx_range_list2 =  {
-	{MHz(144),MHz(148),TS711_ALL_MODES,-1,-1,TS711_VFO},
+	{MHz(430),MHz(450),TS811_ALL_MODES,-1,-1,TS811_VFO},
 	RIG_FRNG_END,
   }, /* rx range */
 .tx_range_list2 =  {
-    {MHz(144),MHz(148),TS711_ALL_MODES,W(5),W(25),TS711_VFO},
+    {MHz(430),MHz(450),TS811_ALL_MODES,W(5),W(25),TS811_VFO},
 	RIG_FRNG_END,
   }, /* tx range */
 
 
 .tuning_steps =  {
-	 {TS711_ALL_MODES,50},
-	 {TS711_ALL_MODES,100},
-	 {TS711_ALL_MODES,kHz(1)},
-	 {TS711_ALL_MODES,kHz(5)},
-	 {TS711_ALL_MODES,kHz(9)},
-	 {TS711_ALL_MODES,kHz(10)},
-	 {TS711_ALL_MODES,12500},
-	 {TS711_ALL_MODES,kHz(20)},
-	 {TS711_ALL_MODES,kHz(25)},
-	 {TS711_ALL_MODES,kHz(100)},
-	 {TS711_ALL_MODES,MHz(1)},
-	 {TS711_ALL_MODES,0},	/* any tuning step */
+	 {TS811_ALL_MODES,50},
+	 {TS811_ALL_MODES,100},
+	 {TS811_ALL_MODES,kHz(1)},
+	 {TS811_ALL_MODES,kHz(5)},
+	 {TS811_ALL_MODES,kHz(9)},
+	 {TS811_ALL_MODES,kHz(10)},
+	 {TS811_ALL_MODES,12500},
+	 {TS811_ALL_MODES,kHz(20)},
+	 {TS811_ALL_MODES,kHz(25)},
+	 {TS811_ALL_MODES,kHz(100)},
+	 {TS811_ALL_MODES,MHz(1)},
+	 {TS811_ALL_MODES,0},	/* any tuning step */
 	 RIG_TS_END,
 	},
         /* mode/filter list, remember: order matters! */
@@ -153,7 +142,7 @@ const struct rig_caps ts711_caps = {
 		{RIG_MODE_FM, kHz(12)},
 		RIG_FLT_END,
 	},
-.priv =  (void *)&ts711_priv_caps,
+.priv =  (void *)&ts811_priv_caps,
 
 .rig_init = kenwood_init,
 .rig_cleanup = kenwood_cleanup,
