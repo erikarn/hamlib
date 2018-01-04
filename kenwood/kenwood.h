@@ -65,6 +65,7 @@ extern const struct confparams kenwood_cfg_params[];
 struct kenwood_priv_caps {
     char cmdtrm;    /* Command termination chars (ken=';' or th='\r') */
     int if_len;     /* length of IF; answer excluding ';' terminator */
+    int is_if10a;   /* Whether this is IF-10A (TS-711, TS-811, TS-940) */
     rmode_t *mode_table;
 };
 
@@ -192,6 +193,13 @@ extern const struct rig_caps ts940_caps;
 extern const struct rig_caps ts711_caps;
 extern const struct rig_caps ts811_caps;
 extern const struct rig_caps r5000_caps;
+
+extern const struct rig_caps ts711a_caps;
+extern const struct rig_caps ts711b_caps;
+extern const struct rig_caps ts711e_caps;
+extern const struct rig_caps ts811a_caps;
+extern const struct rig_caps ts811b_caps;
+extern const struct rig_caps ts811e_caps;
 
 extern const struct rig_caps ts480_caps;
 extern const struct rig_caps ts590_caps;
