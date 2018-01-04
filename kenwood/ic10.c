@@ -432,7 +432,11 @@ int ic10_get_ptt(RIG *rig, vfo_t vfo, ptt_t *ptt)
 	/* IFggmmmkkkhhh snnnzrx yytdfcp */
 	/* IFggmmmkkkhhhxxxxxrrrrrssxcctmfcp */
 
-	*ptt = infobuf[iflen-5] == '0' ? RIG_PTT_OFF : RIG_PTT_ON;
+	if (priv->is_if10a) {
+		*ptt = infobuf[iflen-9] == '0' ? RIG_PTT_OFF : RIG_PTT_ON;
+	} else {
+		*ptt = infobuf[iflen-5] == '0' ? RIG_PTT_OFF : RIG_PTT_ON;
+	}
 
 	return RIG_OK;
 }
@@ -483,8 +487,13 @@ int ic10_get_mem(RIG *rig, vfo_t vfo, int *ch)
 
 	/* IFggmmmkkkhhh snnnzrx yytdfcp */
 	/* IFggmmmkkkhhhxxxxxrrrrrssxcctmfcp */
-	membuf[iflen-5] = '\0';
-	*ch = atoi(membuf+priv->if_len-7);
+	if (priv->is_if10a) {
+		membuf[iflen-9] = '\0';
+		*ch = atoi(membuf+priv->if_len-11);
+	} else {
+		membuf[iflen-5] = '\0';
+		*ch = atoi(membuf+priv->if_len-7);
+	}
 
 	return RIG_OK;
 }
