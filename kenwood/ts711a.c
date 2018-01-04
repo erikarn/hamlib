@@ -53,9 +53,10 @@
  * differences, etc, etc.
  */
 
-static struct kenwood_priv_caps  ts711_priv_caps  = {
+static struct kenwood_priv_caps  ts711a_priv_caps  = {
 	.cmdtrm =  EOM_KEN,
-	.if_len =  28,
+	.if_len =  37,
+	.is_if10a = 1,
 };
 
 /*
@@ -64,8 +65,16 @@ static struct kenwood_priv_caps  ts711_priv_caps  = {
  * specs: http://www.qsl.net/sm7vhs/radio/kenwood/ts711/specs.htm
  *
  * TODO: protocol to be check with manual!
+ *
+ * At least on the PIEXX IF10A add-on it looks like the following:
+ *
+ * IF0014652009000010+00000  01042000110;
+ *
+ * There's no XIT, no memory bank; 01 is the beginning of the channel field.
+ * On the E versions some of the other fields are spaces as there are no
+ * CTCSS tone boards in the E variants.
  */
-const struct rig_caps ts711_caps = {
+const struct rig_caps ts711a_caps = {
 .rig_model =  RIG_MODEL_TS711A,
 .model_name = "TS-711A",
 .mfg_name =  "Kenwood",
@@ -153,7 +162,7 @@ const struct rig_caps ts711_caps = {
 		{RIG_MODE_FM, kHz(12)},
 		RIG_FLT_END,
 	},
-.priv =  (void *)&ts711_priv_caps,
+.priv =  (void *)&ts711a_priv_caps,
 
 .rig_init = kenwood_init,
 .rig_cleanup = kenwood_cleanup,

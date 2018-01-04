@@ -54,7 +54,7 @@ static struct kenwood_priv_caps  ts811_priv_caps  = {
  *
  *  TODO: protocol to be check with manual!
  */
-const struct rig_caps ts811_caps = {
+const struct rig_caps ts811a_caps = {
 .rig_model =  RIG_MODEL_TS811A,
 .model_name = "TS-811A",
 .mfg_name =  "Kenwood",

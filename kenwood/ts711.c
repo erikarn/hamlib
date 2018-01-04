@@ -43,7 +43,7 @@
 #define TS711_SCAN_OP (RIG_SCAN_VFO)
 
 /*
- * XXX TODO: if_len may be different depending upon whether it's a A,B or E.
+ * TODO: if_len may be different depending upon whether it's a A,B or E.
  * + Tone on/off isn't applicable to "kenwood" versions of the E rigs
  * + Tone frequency is only A/B rigs
  * + Offset is only TS-811A, TS-811B, TS-811E, TS-711A, TS-711E.
@@ -55,7 +55,8 @@
 
 static struct kenwood_priv_caps  ts711_priv_caps  = {
 	.cmdtrm =  EOM_KEN,
-	.if_len =  28,
+	.if_len =  37,
+	.is_if10a = 1,
 };
 
 /*

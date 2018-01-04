@@ -44,7 +44,8 @@
 
 static struct kenwood_priv_caps  ts811_priv_caps  = {
 	.cmdtrm =  EOM_KEN,
-	.if_len =  28,
+	.if_len =  37,
+	.is_if10a = 1,
 };
 
 /*
@@ -53,8 +54,14 @@ static struct kenwood_priv_caps  ts811_priv_caps  = {
  * specs: http://www.qsl.net/sm7vhs/radio/kenwood/ts811/specs.htm
  *
  *  TODO: protocol to be check with manual!
+ *
+ * Eg: the 'e' rigs don't do CTCSS tones, and IF looks like:
+ *
+ * IF0043230300000000+00000  0103000   0;
+ *
+ * Notice some of the spaces there..
  */
-const struct rig_caps ts811_caps = {
+const struct rig_caps ts811e_caps = {
 .rig_model =  RIG_MODEL_TS811E,
 .model_name = "TS-811E",
 .mfg_name =  "Kenwood",
