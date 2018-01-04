@@ -222,7 +222,11 @@ int ic10_get_split_vfo(RIG *rig, vfo_t vfo, split_t *split, vfo_t *txvfo)
 	/* IFggmmmkkkhhh snnnzrx yytdfcp */
 	/* IFggmmmkkkhhhxxxxxrrrrrssxcctmfcp */
 
-	*split = infobuf[iflen-1] == '0' ? RIG_SPLIT_OFF : RIG_SPLIT_ON;
+	if (priv->is_if10a) {
+		*split = infobuf[iflen-5] == '0' ? RIG_SPLIT_OFF : RIG_SPLIT_ON;
+	} else {
+		*split = infobuf[iflen-1] == '0' ? RIG_SPLIT_OFF : RIG_SPLIT_ON;
+	}
 
 	return RIG_OK;
 }
