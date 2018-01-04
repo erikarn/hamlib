@@ -101,13 +101,12 @@ int ic10_transaction (RIG *rig, const char *cmd, int cmd_len, char *data, int *d
 /*
  * Get the anwser of IF command, with retry handling
  */
-static int get_ic10_if (RIG *rig, char *data)
+static int get_ic10_if (RIG *rig, char *data, int data_len)
 {
 	struct kenwood_priv_caps *priv = (struct kenwood_priv_caps *)rig->caps->priv;
-	int i, data_len, retval=!RIG_OK;
+	int i, retval=!RIG_OK;
 
 	for (i=0; retval!=RIG_OK && i < rig->caps->retry; i++) {
-		data_len = 37;
 		retval = ic10_transaction (rig, "IF;", 3, data, &data_len);
 		if (retval != RIG_OK)
 			continue;
@@ -120,6 +119,8 @@ static int get_ic10_if (RIG *rig, char *data)
 			retval = -RIG_ERJCTED;
 		}
 	}
+
+	rig_debug(RIG_DEBUG_TRACE, "%s: read: '%.*s'\n", __func__, data_len, data);
 
 	return retval;
 }
@@ -167,7 +168,7 @@ int ic10_get_vfo(RIG *rig, vfo_t *vfo)
 
 
 	/* query RX VFO */
-	retval = get_ic10_if(rig, vfobuf);
+	retval = get_ic10_if(rig, vfobuf, 50);
 	if (retval != RIG_OK)
 		return retval;
 
@@ -207,7 +208,7 @@ int ic10_get_split_vfo(RIG *rig, vfo_t vfo, split_t *split, vfo_t *txvfo)
 	char infobuf[50];
 	int retval, iflen;
 
-	retval = get_ic10_if (rig, infobuf);
+	retval = get_ic10_if (rig, infobuf, 50);
 	if (retval != RIG_OK)
 		return retval;
 
@@ -235,17 +236,26 @@ int ic10_get_mode(RIG *rig, vfo_t vfo, rmode_t *mode, pbwidth_t *width)
 	int retval, iflen;
 
 	/* query RX VFO */
-	retval = get_ic10_if (rig, modebuf);
+	retval = get_ic10_if (rig, modebuf, 50);
 	if (retval != RIG_OK)
 		return retval;
 
 	/* trim extra spaces */
 	iflen = ic10_cmd_trim(modebuf, priv->if_len);
 
-	/* IFggmmmkkkhhh snnnzrx yytdfcp */
-	/* IFggmmmkkkhhhxxxxxrrrrrssxcctmfcp */
+	rig_debug(RIG_DEBUG_VERBOSE, "%s: read '%.*s'\n",
+	    __func__, iflen, modebuf);
 
-	c = modebuf[iflen-4];
+	/* XXX TODO: re-verify these */
+	/* IF-10A (TS711, TS811): IFggmmmkkkhhh snnnzrx yytdfcp */
+	/* IC-10 (TS-440S): IFggmmmkkkhhhxxxxxrrrrrssxcctmfcp */
+
+	if (priv->is_if10a) {
+		c = modebuf[iflen-8];
+	} else {
+		c = modebuf[iflen-4];
+	}
+	rig_debug(RIG_DEBUG_TRACE, "%s: modechar=%c\n", __func__, c);
 	switch (c) {
 	case MD_CW  :	*mode = RIG_MODE_CW; break;
 	case MD_USB :	*mode = RIG_MODE_USB; break;
@@ -310,7 +320,7 @@ int ic10_get_freq(RIG *rig, vfo_t vfo, freq_t *freq)
 		return kenwood_get_freq(rig, vfo, freq);
 	}
 
-	retval = get_ic10_if (rig, infobuf);
+	retval = get_ic10_if (rig, infobuf, 50);
 	if (retval != RIG_OK)
 		return retval;
 
@@ -409,7 +419,7 @@ int ic10_get_ptt(RIG *rig, vfo_t vfo, ptt_t *ptt)
 	char infobuf[50];
 	int retval, iflen;
 
-	retval = get_ic10_if (rig, infobuf);
+	retval = get_ic10_if (rig, infobuf, 50);
 	if (retval != RIG_OK)
 		return retval;
 
@@ -461,7 +471,7 @@ int ic10_get_mem(RIG *rig, vfo_t vfo, int *ch)
 	char membuf[50];
 	int retval, iflen;
 
-	retval = get_ic10_if (rig, membuf);
+	retval = get_ic10_if (rig, membuf, 50);
 	if (retval != RIG_OK)
 		return retval;
 
