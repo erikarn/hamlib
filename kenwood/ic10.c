@@ -178,7 +178,11 @@ int ic10_get_vfo(RIG *rig, vfo_t *vfo)
 	/* IFggmmmkkkhhh snnnzrx yytdfcp */
 	/* IFggmmmkkkhhhxxxxxrrrrrssxcctmfcp */
 
-	c = vfobuf[iflen - 3];
+	if (priv->is_if10a) {
+		c = vfobuf[iflen - 7];
+	} else {
+		c = vfobuf[iflen - 3];
+	}
 	switch (c) {
 	case '0': *vfo = RIG_VFO_A; break;
 	case '1': *vfo = RIG_VFO_B; break;
@@ -246,9 +250,8 @@ int ic10_get_mode(RIG *rig, vfo_t vfo, rmode_t *mode, pbwidth_t *width)
 	rig_debug(RIG_DEBUG_VERBOSE, "%s: read '%.*s'\n",
 	    __func__, iflen, modebuf);
 
-	/* XXX TODO: re-verify these */
-	/* IF-10A (TS711, TS811): IFggmmmkkkhhh snnnzrx yytdfcp */
-	/* IC-10 (TS-440S): IFggmmmkkkhhhxxxxxrrrrrssxcctmfcp */
+	/* IFggmmmkkkhhh snnnzrx yytdfcp */
+	/* IFggmmmkkkhhhxxxxxrrrrrssxcctmfcp */
 
 	if (priv->is_if10a) {
 		c = modebuf[iflen-8];
