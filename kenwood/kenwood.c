@@ -1089,7 +1089,7 @@ int kenwood_get_vfo_if(RIG *rig, vfo_t *vfo)
  */
 int kenwood_set_freq(RIG *rig, vfo_t vfo, freq_t freq)
 {
-  rig_debug(RIG_DEBUG_VERBOSE, "%s called\n", __func__);
+  rig_debug(RIG_DEBUG_VERBOSE, "%s called; vfo=%d, freq=%d\n", __func__, vfo, freq);
 
   if (!rig)
     return -RIG_EINVAL;
