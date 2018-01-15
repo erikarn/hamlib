@@ -4,7 +4,7 @@ TSSRC = ts850.c ts870s.c ts570.c ts450s.c ts950.c ts50s.c \
 	ts680.c ts690.c ts140.c ts480.c trc80.c ts590.c \
 	ts990s.c ts990s.h flex6xxx.c pihpsdr.c
 
-IC10SRC = ts440.c ts940.c ts711.c ts711a.c ts711b.c ts711e.c ts811.c ts811a.c ts811b.c ts811e.c r5000.c
+IC10SRC = ts440.c ts940.c ts711.c ts811.c r5000.c
 
 THSRC = thd7.c thf7.c thg71.c tmd700.c tmv7.c thf6a.c thd72.c tmd710.c
 

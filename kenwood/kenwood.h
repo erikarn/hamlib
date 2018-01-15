@@ -194,13 +194,6 @@ extern const struct rig_caps ts711_caps;
 extern const struct rig_caps ts811_caps;
 extern const struct rig_caps r5000_caps;
 
-extern const struct rig_caps ts711a_caps;
-extern const struct rig_caps ts711b_caps;
-extern const struct rig_caps ts711e_caps;
-extern const struct rig_caps ts811a_caps;
-extern const struct rig_caps ts811b_caps;
-extern const struct rig_caps ts811e_caps;
-
 extern const struct rig_caps ts480_caps;
 extern const struct rig_caps ts590_caps;
 extern const struct rig_caps ts590sg_caps;
